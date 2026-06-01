@@ -1,10 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Moon, Sun, Menu, X, Settings } from "lucide-react"
+import { Moon, Sun, Menu, X } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
 
@@ -13,7 +12,6 @@ const navItems = [
   { name: "About", href: "#about" },
   { name: "Skills", href: "#skills" },
   { name: "Projects", href: "#projects" },
-  { name: "Experience", href: "#experience" },
   { name: "Contact", href: "#contact" },
 ]
 
@@ -87,19 +85,6 @@ export function Navigation() {
 
             {/* Right-side actions */}
             <div className="flex items-center gap-1">
-              {/* Admin — desktop only */}
-              <Button
-                variant="ghost"
-                size="icon"
-                asChild
-                aria-label="Admin Dashboard"
-                className="hidden sm:flex w-10 h-10"
-              >
-                <Link href="/admin">
-                  <Settings className="h-4 w-4" />
-                </Link>
-              </Button>
-
               {/* Theme toggle */}
               <Button
                 variant="ghost"
@@ -157,17 +142,6 @@ export function Navigation() {
                   {item.name}
                 </a>
               ))}
-
-              <div className="my-2 border-t border-border" />
-
-              <Link
-                href="/admin"
-                className="flex items-center gap-3 px-4 py-3.5 text-base font-medium rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors min-h-[48px]"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Settings className="h-5 w-5 shrink-0" />
-                Admin Dashboard
-              </Link>
             </nav>
           </div>
         </div>

@@ -6,6 +6,7 @@ import { PersonalInfoEditor } from "@/components/admin/personal-info-editor"
 import { SkillsEditor } from "@/components/admin/skills-editor"
 import { ProjectsEditor } from "@/components/admin/projects-editor"
 import { ExperienceEditor } from "@/components/admin/experience-editor"
+import { CVEditor } from "@/components/admin/cv-editor"
 import { PasswordEditor } from "@/components/admin/password-editor"
 import { ProtectedRoute } from "@/components/admin/protected-route"
 import { useAuth } from "@/lib/auth-context"
@@ -45,11 +46,12 @@ export default function AdminDashboardPage() {
 
         <main className="container mx-auto px-4 py-8">
           <Tabs defaultValue="personal" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsList className="grid w-full grid-cols-6 mb-8">
               <TabsTrigger value="personal">Personal Info</TabsTrigger>
               <TabsTrigger value="skills">Skills</TabsTrigger>
               <TabsTrigger value="projects">Projects</TabsTrigger>
               <TabsTrigger value="experience">Experience</TabsTrigger>
+              <TabsTrigger value="cv">CV</TabsTrigger>
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
@@ -67,6 +69,10 @@ export default function AdminDashboardPage() {
 
             <TabsContent value="experience">
               <ExperienceEditor />
+            </TabsContent>
+
+            <TabsContent value="cv">
+              <CVEditor />
             </TabsContent>
 
             <TabsContent value="settings">
