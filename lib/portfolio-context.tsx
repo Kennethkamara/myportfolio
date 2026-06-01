@@ -29,6 +29,10 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     if (savedData) {
       try {
         const parsedData = JSON.parse(savedData);
+        // Ensure skillCategories exists (migration for existing data)
+        if (!parsedData.skillCategories) {
+          parsedData.skillCategories = mockPortfolioData.skillCategories;
+        }
         setData(parsedData);
       } catch (error) {
         console.error("Failed to parse saved data:", error);

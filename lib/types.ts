@@ -18,6 +18,13 @@ export interface Skill {
   icon?: string
 }
 
+export interface SkillCategory {
+  id: "frontend" | "backend" | "database" | "design" | "tools" | "other"
+  title: string
+  description: string
+  color: string
+}
+
 export interface Experience {
   id: string
   title: string
@@ -51,6 +58,7 @@ export interface PersonalInfo {
 export interface PortfolioData {
   personalInfo: PersonalInfo
   skills: Skill[]
+  skillCategories: SkillCategory[]
   projects: Project[]
   experiences: Experience[]
 }

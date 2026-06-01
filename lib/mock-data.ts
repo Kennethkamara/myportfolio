@@ -23,18 +23,69 @@ export const mockPortfolioData: PortfolioData = {
     { id: "2", name: "Next.js", category: "frontend" },
     { id: "3", name: "TypeScript", category: "frontend" },
     { id: "4", name: "Tailwind CSS", category: "frontend" },
+    { id: "5", name: "Vue.js", category: "frontend" },
     // Backend
-    { id: "5", name: "Node.js", category: "backend" },
-    { id: "6", name: "Python", category: "backend" },
+    { id: "6", name: "Node.js", category: "backend" },
+    { id: "7", name: "Python", category: "backend" },
+    { id: "8", name: "Express.js", category: "backend" },
+    { id: "9", name: "REST APIs", category: "backend" },
     // Database
-    { id: "7", name: "PostgreSQL", category: "database" },
-    { id: "8", name: "MongoDB", category: "database" },
+    { id: "10", name: "PostgreSQL", category: "database" },
+    { id: "11", name: "MongoDB", category: "database" },
+    { id: "12", name: "MySQL", category: "database" },
     // Design
-    { id: "9", name: "Figma", category: "design" },
-    { id: "10", name: "Adobe XD", category: "design" },
+    { id: "13", name: "Figma", category: "design" },
+    { id: "14", name: "Adobe XD", category: "design" },
+    { id: "15", name: "Photoshop", category: "design" },
+    { id: "16", name: "Illustrator", category: "design" },
     // Tools
-    { id: "11", name: "Git", category: "tools" },
-    { id: "12", name: "Docker", category: "tools" },
+    { id: "17", name: "Git", category: "tools" },
+    { id: "18", name: "Docker", category: "tools" },
+    { id: "19", name: "VS Code", category: "tools" },
+    { id: "20", name: "Postman", category: "tools" },
+    // Other
+    { id: "21", name: "JWT", category: "other" },
+    { id: "22", name: "Linux", category: "other" },
+    { id: "23", name: "Nginx", category: "other" },
+    { id: "24", name: "Vercel", category: "other" },
+  ],
+  skillCategories: [
+    {
+      id: "frontend",
+      title: "Frontend",
+      description: "Building responsive and interactive user interfaces.",
+      color: "cyan",
+    },
+    {
+      id: "backend",
+      title: "Backend",
+      description: "Server-side development and building robust APIs.",
+      color: "green",
+    },
+    {
+      id: "database",
+      title: "Databases",
+      description: "Storing and managing data efficiently.",
+      color: "purple",
+    },
+    {
+      id: "design",
+      title: "Design & Creative",
+      description: "Designing user experiences and visual interfaces.",
+      color: "pink",
+    },
+    {
+      id: "tools",
+      title: "Tools & Technologies",
+      description: "Essential tools that improve development workflow.",
+      color: "orange",
+    },
+    {
+      id: "other",
+      title: "Other",
+      description: "Additional technologies I work with.",
+      color: "teal",
+    },
   ],
   projects: [
     {
