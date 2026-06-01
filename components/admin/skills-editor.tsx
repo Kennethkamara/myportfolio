@@ -40,7 +40,6 @@ export function SkillsEditor() {
       id: Date.now().toString(),
       name: "",
       category: "frontend",
-      level: 50,
     };
     setSkills([...skills, newSkill]);
   };
@@ -48,7 +47,7 @@ export function SkillsEditor() {
   const handleUpdateSkill = (
     id: string,
     field: keyof Skill,
-    value: string | number,
+    value: string,
   ) => {
     setSkills(
       skills.map((skill) =>
@@ -73,13 +72,23 @@ export function SkillsEditor() {
     // Show success state
     setSaveSuccess(true);
     toast({
-      title: "✓ Changes saved successfully",
+      title: "Changes saved successfully",
       description: "Your skills have been updated.",
     });
 
     // Reset success state after 3 seconds
     setTimeout(() => setSaveSuccess(false), 3000);
     setIsSaving(false);
+  };
+
+  // Group skills by category for better organization in the editor
+  const categoryLabels: Record<string, string> = {
+    frontend: "Frontend",
+    backend: "Backend",
+    database: "Database",
+    design: "Design",
+    tools: "Tools",
+    other: "Other",
   };
 
   return (
@@ -89,7 +98,7 @@ export function SkillsEditor() {
           <div>
             <CardTitle>Skills</CardTitle>
             <CardDescription>
-              Manage your skills and expertise levels
+              Manage your skills grouped by category
             </CardDescription>
           </div>
           <Button onClick={handleAddSkill}>
@@ -126,30 +135,13 @@ export function SkillsEditor() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="frontend">Frontend</SelectItem>
-                  <SelectItem value="backend">Backend</SelectItem>
-                  <SelectItem value="design">Design</SelectItem>
-                  <SelectItem value="tools">Tools</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                  {Object.entries(categoryLabels).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="w-32 space-y-2">
-              <Label>Level (%)</Label>
-              <Input
-                type="number"
-                min="0"
-                max="100"
-                value={skill.level}
-                onChange={(e) =>
-                  handleUpdateSkill(
-                    skill.id,
-                    "level",
-                    Number.parseInt(e.target.value),
-                  )
-                }
-              />
             </div>
 
             <Button
@@ -164,7 +156,7 @@ export function SkillsEditor() {
 
         {skills.length === 0 && (
           <div className="text-center py-8 text-muted-foreground">
-            No skills added yet. Click "Add Skill" to get started.
+            No skills added yet. Click &quot;Add Skill&quot; to get started.
           </div>
         )}
 
@@ -172,11 +164,10 @@ export function SkillsEditor() {
           onClick={handleSave}
           className="w-full"
           disabled={isSaving}
-          variant={saveSuccess ? "default" : "default"}
         >
           {isSaving ? (
             <>
-              <span className="animate-spin mr-2">⟳</span>
+              <span className="animate-spin mr-2">&#x27F3;</span>
               Saving...
             </>
           ) : saveSuccess ? (

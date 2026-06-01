@@ -19,26 +19,22 @@ export const mockPortfolioData: PortfolioData = {
   },
   skills: [
     // Frontend
-    { id: "1", name: "React", category: "frontend", level: 95 },
-    { id: "2", name: "Next.js", category: "frontend", level: 90 },
-    { id: "3", name: "TypeScript", category: "frontend", level: 88 },
-    { id: "4", name: "Tailwind CSS", category: "frontend", level: 92 },
-    { id: "5", name: "Vue.js", category: "frontend", level: 80 },
+    { id: "1", name: "React", category: "frontend" },
+    { id: "2", name: "Next.js", category: "frontend" },
+    { id: "3", name: "TypeScript", category: "frontend" },
+    { id: "4", name: "Tailwind CSS", category: "frontend" },
     // Backend
-    { id: "6", name: "Node.js", category: "backend", level: 85 },
-    { id: "7", name: "Python", category: "backend", level: 82 },
-    { id: "8", name: "PostgreSQL", category: "backend", level: 78 },
-    { id: "9", name: "MongoDB", category: "backend", level: 75 },
+    { id: "5", name: "Node.js", category: "backend" },
+    { id: "6", name: "Python", category: "backend" },
+    // Database
+    { id: "7", name: "PostgreSQL", category: "database" },
+    { id: "8", name: "MongoDB", category: "database" },
     // Design
-    { id: "10", name: "Figma", category: "design", level: 93 },
-    { id: "11", name: "Adobe XD", category: "design", level: 87 },
-    { id: "12", name: "Photoshop", category: "design", level: 85 },
-    { id: "13", name: "Illustrator", category: "design", level: 83 },
-    { id: "14", name: "After Effects", category: "design", level: 80 },
+    { id: "9", name: "Figma", category: "design" },
+    { id: "10", name: "Adobe XD", category: "design" },
     // Tools
-    { id: "15", name: "Git", category: "tools", level: 90 },
-    { id: "16", name: "Docker", category: "tools", level: 75 },
-    { id: "17", name: "AWS", category: "tools", level: 70 },
+    { id: "11", name: "Git", category: "tools" },
+    { id: "12", name: "Docker", category: "tools" },
   ],
   projects: [
     {
