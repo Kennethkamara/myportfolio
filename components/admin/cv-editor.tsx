@@ -1,37 +1,90 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePortfolio } from "@/lib/portfolio-context";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Save, Upload, FileText, User, Briefcase, GraduationCap, Award } from "lucide-react";
+import {
+  Upload,
+  FileText,
+  User,
+  Briefcase,
+  GraduationCap,
+  Award,
+  Loader2,
+  CheckCircle2,
+  Trash2,
+} from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CVQRCode } from "@/components/admin/cv-qr-code";
 
 export function CVEditor() {
   const { data, updateData } = usePortfolio();
   const { toast } = useToast();
-  const [personalInfo, setPersonalInfo] = useState(data.personalInfo);
-  const [isSaving, setIsSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const { personalInfo } = data;
 
   // Filter experiences by type
   const workExperience = data.experiences.filter((e) => e.type === "work");
   const education = data.experiences.filter((e) => e.type === "education");
   const certifications = data.experiences.filter((e) => e.type === "certification");
 
-  const handleSave = () => {
-    setIsSaving(true);
-    updateData({ personalInfo });
-    setTimeout(() => {
-      setIsSaving(false);
-      toast({
-        title: "CV Updated",
-        description: "Your CV information has been saved successfully.",
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload-cv", {
+        method: "POST",
+        body: formData,
       });
-    }, 500);
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Upload failed");
+      }
+
+      updateData({
+        personalInfo: {
+          ...personalInfo,
+          cvUrl: result.url,
+          cvFileName: result.name,
+        },
+      });
+
+      toast({
+        title: "CV Uploaded",
+        description: `${result.name} is now available for download on your CV page.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Upload Failed",
+        description: error instanceof Error ? error.message : "Something went wrong.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemove = () => {
+    updateData({
+      personalInfo: { ...personalInfo, cvUrl: undefined, cvFileName: undefined },
+    });
+    toast({
+      title: "CV Removed",
+      description: "The downloadable CV file has been removed.",
+    });
   };
 
   return (
@@ -43,19 +96,99 @@ export function CVEditor() {
             CV Page Settings
           </CardTitle>
           <CardDescription>
-            Configure what appears on your CV page. Work experience, education, and certifications
-            are managed in the Experience tab.
+            Upload your CV file, generate a shareable QR code, and review what appears on your CV page.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="overview">CV Overview</TabsTrigger>
-              <TabsTrigger value="pdf">PDF Settings</TabsTrigger>
+          <Tabs defaultValue="upload" className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="upload">CV File</TabsTrigger>
+              <TabsTrigger value="qr">QR Code</TabsTrigger>
+              <TabsTrigger value="overview">Overview</TabsTrigger>
             </TabsList>
 
+            {/* CV FILE UPLOAD */}
+            <TabsContent value="upload" className="space-y-6 pt-4">
+              <div className="space-y-2">
+                <Label>CV File (PDF or DOC/DOCX)</Label>
+                <p className="text-xs text-muted-foreground">
+                  Upload your CV. Once uploaded, a &quot;Download PDF&quot; button appears on your CV page.
+                </p>
+              </div>
+
+              {personalInfo.cvUrl ? (
+                <div className="flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="rounded-full bg-green-500/10 p-2">
+                      <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    </div>
+                    <div>
+                      <p className="font-medium">{personalInfo.cvFileName || "CV file"}</p>
+                      <a
+                        href={personalInfo.cvUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-muted-foreground underline hover:text-foreground"
+                      >
+                        View current file
+                      </a>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                    >
+                      {isUploading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <Upload className="mr-2 h-4 w-4" />
+                      )}
+                      Replace
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={handleRemove} disabled={isUploading}>
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="flex w-full flex-col items-center gap-2 rounded-lg border border-dashed p-8 text-center transition hover:border-foreground/40 hover:bg-muted/30 disabled:opacity-60"
+                >
+                  {isUploading ? (
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  ) : (
+                    <Upload className="h-8 w-8 text-muted-foreground" />
+                  )}
+                  <p className="text-sm font-medium">
+                    {isUploading ? "Uploading..." : "Click to upload your CV"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">PDF, DOC, or DOCX up to 10MB</p>
+                </button>
+              )}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </TabsContent>
+
+            {/* QR CODE */}
+            <TabsContent value="qr" className="pt-4">
+              <CVQRCode targetPath="/cv" />
+            </TabsContent>
+
+            {/* OVERVIEW */}
             <TabsContent value="overview" className="space-y-6 pt-4">
-              {/* Summary Stats */}
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <Card>
                   <CardContent className="pt-6">
@@ -114,7 +247,6 @@ export function CVEditor() {
                 </Card>
               </div>
 
-              {/* Quick Info */}
               <div className="rounded-lg border p-4 bg-muted/30">
                 <h3 className="font-medium mb-2">CV Page Content Sources</h3>
                 <ul className="text-sm text-muted-foreground space-y-1">
@@ -132,42 +264,6 @@ export function CVEditor() {
                   <a href="/cv" target="_blank" rel="noreferrer">
                     View CV Page
                   </a>
-                </Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="pdf" className="space-y-6 pt-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="cvUrl">CV PDF URL</Label>
-                  <Input
-                    id="cvUrl"
-                    value={personalInfo.cvUrl || ""}
-                    onChange={(e) =>
-                      setPersonalInfo({ ...personalInfo, cvUrl: e.target.value })
-                    }
-                    placeholder="https://example.com/your-cv.pdf"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Link to a downloadable PDF version of your CV. This will show a download button on the CV page.
-                  </p>
-                </div>
-
-                <div className="rounded-lg border border-dashed p-6 text-center">
-                  <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Upload your CV PDF to a file hosting service and paste the URL above
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Recommended: Google Drive, Dropbox, or your own hosting
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <Button onClick={handleSave} disabled={isSaving}>
-                  <Save className="mr-2 h-4 w-4" />
-                  {isSaving ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
             </TabsContent>

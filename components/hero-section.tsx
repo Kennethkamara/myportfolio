@@ -56,18 +56,16 @@ export function HeroSection() {
                 </a>
               </Button>
 
-              {personalInfo.cvUrl && (
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto min-h-[48px] text-base"
-                  asChild
-                >
-                  <a href="/cv" className="inline-flex items-center justify-center gap-2">
-                    <Download className="h-4 w-4" /> View CV
-                  </a>
-                </Button>
-              )}
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto min-h-[48px] text-base"
+                asChild
+              >
+                <a href="/cv" className="inline-flex items-center justify-center gap-2">
+                  <Download className="h-4 w-4" /> View CV
+                </a>
+              </Button>
             </div>
 
             {/* Social Links */}

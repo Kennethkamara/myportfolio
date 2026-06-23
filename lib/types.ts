@@ -52,6 +52,7 @@ export interface PersonalInfo {
   location: string
   avatar: string
   cvUrl?: string
+  cvFileName?: string
   socialLinks: SocialLink[]
 }
 
